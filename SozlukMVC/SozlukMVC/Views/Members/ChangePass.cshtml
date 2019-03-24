@@ -1,0 +1,110 @@
+﻿<style>
+    .pass_show {
+        position: relative
+    }
+
+        .pass_show .ptxt {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            z-index: 1;
+            color: #f36c01;
+            margin-top: -10px;
+            cursor: pointer;
+            transition: .3s ease all;
+        }
+
+            .pass_show .ptxt:hover {
+                color: #333333;
+            } 
+</style>
+@*<form method="post" onsubmit="kontrol()"></form>*@
+@using (Html.BeginForm("ChangePass","Members", FormMethod.Post, new { @onsubmit = "javascript:kontrol()"}))
+{
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            @if (ViewBag.Success != null && ViewBag.Success)
+            {
+                <div class="alert alert-success">
+                    Şifreniz değiştirildi.
+                </div>
+            }
+            @if (ViewBag.WrongPassword != null && ViewBag.WrongPassword)
+            {
+                <div class="alert alert-danger">
+                    Mevcut şifrenizi yanlış girdiniz.
+                </div>
+            }
+            @if(ViewBag.Errors != null)
+            {
+                <div class="alert alert-danger">
+                    @foreach (string item in ViewBag.Errors)
+                    {
+                        @item <br/>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            @Html.Label("Mevcut Şifre")
+            <div class="form-group pass_show">
+                @Html.TextBox("oldp", null, new
+           {
+               @class = "form-control",
+               @type = "password",
+               @placeholder = "Mevcut Şifreniz"
+           })
+            </div>
+            @Html.Label("Yeni Şifreniz")
+            <div class="form-group pass_show">
+                @Html.TextBox("newp", null, new
+           {
+               @class = "form-control",
+               @type = "password",
+               @placeholder = "Yeni şifre"
+           })
+            </div>
+           @Html.Label("Yeni Şifre (tekrar)")
+            <div class="form-group pass_show">
+                @Html.TextBox("tekrar", null, new
+           {
+               @class = "form-control",
+               @type = "password",
+               @placeholder = "Yeni şifre (tekrar)"
+           })
+            </div>
+        <button class="btn btn-primary">Kaydet</button>
+        </div>
+    </div>
+</div>
+}
+<script>
+    function kontrol(e) {
+        var yeni = $("input[name='newp']").val();
+        var tekrar = $("input[name='tekrar']").val();
+
+        if (yeni != tekrar) {
+            alert("Yeni şifre ve tekrarı eşleşmiyor.");
+            e.preventDefault();
+        }
+
+        return yeni == tekrar;
+    }
+
+
+
+    $(document).ready(function () {
+        $('.pass_show').append('<span class="ptxt">Show</span>');
+    });
+    
+    $(document).on('click', '.pass_show .ptxt', function () {
+
+        $(this).text($(this).text() == "Show" ? "Hide" : "Show");
+
+        $(this).prev().attr('type', function (index, attr) { return attr == 'password' ? 'text' : 'password'; });
+
+    });  
+</script>
